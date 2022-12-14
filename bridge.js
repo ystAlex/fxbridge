@@ -29,5 +29,63 @@ async function getBridgeTokenList() {
     })
 }
 
-getBridgeTokenList();
+//getBridgeTokenList();
+function add0(m) { return m < 10 ? '0' + m : m }
+function format(timestamp) {
+    //shijianchuo是整数，否则要parseInt转换
+    var time = new Date(timestamp);
+    var y = time.getFullYear();
+    var m = time.getMonth() + 1;
+    var d = time.getDate();
+    var h = time.getHours();
+    var mm = time.getMinutes();
+    var s = time.getSeconds();
+    return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s);
+}
+let columns = {
+    BlockNumber: 'blockNumber',
+    Time: 'timeStamp',
+    Addr: 'addr',
+    Name: 'name',
+    Symbol: 'symbol',
+    Decimals: 'decimals',
+    TotalSupply: 'totalsupply'
+};
+
+//数组导出CSV文件
+function exportCSV(jsonData, fileName) {
+    stringify1.stringify(jsonData, { header: true, columns: columns }, (err, output) => {
+        if (err) throw err;
+        fs.appendFile(fileName, output, (err) => {
+            if (err) throw err;
+            console.log('csv saved.');
+        });
+    });
+}
+
+//2.
+async function getBlockNumber() {
+    //获取当前最新的区块高度
+    await web3.eth.getBlockNumber().then(async function (result0) {
+        await web3.eth.getBlock(result0).then(async function (result) {
+            let data = [];
+           // console.log(result0,format(result.timestamp*1000));//ms开始的
+            await fxbridegeContract.methods.getBridgeTokenList().call().then(async function (result2) {
+                for (var i = 0; i < result2.length; i++) {
+                    var erc20Contract = new web3.eth.Contract(erc20contractAbi, result2[i].addr);
+                    await erc20Contract.methods.totalSupply().call().then(function (result1) {
+                        data.push([result.number, format(result.timestamp * 1000), result2[i].addr, result2[i].name, result2[i].symbol, result2[i].decimals, result1]);
+                    })
+                }
+                //查询token的发行总量
+            })
+            exportCSV(data, "fx-bridge token supply.csv");
+        })
+    })
+}
+getBlockNumber();
+
+
+
+
 
