@@ -1,0 +1,23 @@
+{
+  "name": "bridge",
+  "version": "1.0.0",
+  "description": "ethereum ",
+  "main": "bridge.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ystAlex/fxbridge.git"
+  },
+  "author": "yst",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ystAlex/fxbridge/issues"
+  },
+  "homepage": "https://github.com/ystAlex/fxbridge#readme",
+  "dependencies": {
+    "csv-stringify": "^6.2.3",
+    "web3": "^1.8.1"
+  }
+}
